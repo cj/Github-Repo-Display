@@ -1,5 +1,6 @@
 <?php
 
 return array(
-  '/' => 'main'
+    '/'        => 'example'
+  , '/example' => 'example'
 );

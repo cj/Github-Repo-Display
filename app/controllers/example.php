@@ -1,6 +1,6 @@
 <?php
 
-class app_main {
+class app_example {
 
   public $settings= array(
     'test' => array(
@@ -21,13 +21,15 @@ class app_main {
 
   public function slim_index()
   {
-    echo 'Hello, World!';
+    echo $this->hello();
   }
 
   public function slim_test($id= false, $year= false)
   {
-    if($id) echo "id: $id<br />";
-    echo $this->hello('Test');
+    $this->slim->render('example/test.php', array(
+        'id' => $id
+      , 'message' => $this->hello('Test')
+    ));
   }
 
   function hello($name= 'World')
