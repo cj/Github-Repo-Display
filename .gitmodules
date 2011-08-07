@@ -1,0 +1,9 @@
+[submodule "submodules/pecs"]
+	path = submodules/pecs
+	url = git://github.com/cj/pecs.git
+[submodule "submodules/slim"]
+	path = submodules/slim
+	url = git://github.com/codeguy/Slim.git
+[submodule "submodules/assetic"]
+	path = submodules/assetic
+	url = https://github.com/kriswallsmith/assetic.git
