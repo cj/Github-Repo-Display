@@ -52,7 +52,7 @@ foreach($methods AS $method)
     }
 
     if($func != 'index')
-      $uri= (strlen($route_uri) > 1)?'/':''."$func$uri";
+      $uri= (strlen($route_uri) > 1?'/':'')."$func$uri";
 
     $route= $app->map("$route_uri$uri", function() use ($app, $class, $func){
       $args = func_get_args();
