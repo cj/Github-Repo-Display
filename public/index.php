@@ -1,4 +1,7 @@
 <?php
+// Set default timezone
+date_default_timezone_set('America/Chicago');
+
 // Set the app path
 define('APPPATH', __DIR__."/../app/");
 
@@ -8,26 +11,42 @@ require '../submodules/slim/Slim/Slim.php';
 // Start the app
 $app = new Slim();
 
+// Grab the called uri
+$called_uri= $app->request()->getResourceUri();
+
+// Grab the routes
+$routes= require_once APPPATH."routes.php";
+// Grab the config file
+$config= require_once APPPATH."config.php";
+// Set the configurations
+$app->config($config);
+$app->config('templates.path', APPPATH.'views');
+$app->config('debug', false);
+
+// Load the error handling controller
+require_once APPPATH.'controllers/error.php';
+// Create a new instance of it
+$app_error= new app_error();
+// Give the error app an instance of slim
+$app_error->slim= $app;
 // Set the 404 location
-$app->notFound(function() {
-  require_once APPPATH.'controllers/error.php';
-  $app_error= new app_error();
+$app->notFound(function() use ($app_error) {
   if(method_exists($app_error, 'init'))
     $app_error->init();
   $args = func_get_args();
   call_user_func_array(array($app_error, "slim_404"), $args);
 });
 
-// Grab the called uri
-$called_uri= $app->request()->getResourceUri();
+// Set the error handler
+$app->error(function() use ($app_error) {
+  if(method_exists($app_error, 'init'))
+    $app_error->init();
+  $args = func_get_args();
+  call_user_func_array(array($app_error, "slim_error"), $args);
+});
 
-// Grab the routes
-$routes= require_once __DIR__."/../app/routes.php";
-// Grab the config file
-$config= require_once __DIR__."/../app/config.php";
-// Set the configurations
-$app->config($config);
-$app->config('templates.path', APPPATH.'views');
+// Capture all fatal errors
+register_shutdown_function(array($app_error, 'slim_error'));
 
 // By default we haven't found the uri yet.
 $found_uri= false;
